@@ -14,10 +14,22 @@
       <input type="text" id="sector" placeholder="Sektörünüzü yazın..." required />
       <button type="submit">Fikir Üret</button>
     </form>
-    <div id="results"></div>
+    <div class="grid" id="results"></div>
   </div>
 
   <script>
+    const productImages = {
+      "Sosyal Medya Post Tasarımı": "sosyalmedya.png",
+      "Instagram Video Üretimi": "video.png",
+      "Sticker & Etiket Baskı": "sticker.png",
+      "Afiş Tasarımı": "afis.png",
+      "Broşür & Katalog": "brosur.png",
+      "Logo & Kurumsal Kimlik": "logo.png",
+      "Dijital Sunum Hazırlama": "sunum.png",
+      "Seslendirme Hizmeti": "ses.png",
+      "Video Kurgu ve Montaj": "kurgu.png"
+    };
+
     document.getElementById('form').addEventListener('submit', async (e) => {
       e.preventDefault();
       const sector = document.getElementById('sector').value;
@@ -31,13 +43,25 @@
       });
 
       const data = await res.json();
+
       resDiv.innerHTML = `
-        <h2>Kampanya Fikirleri</h2>
-        <ul>${data.campaigns.map(c => `<li><strong>${c.baslik}</strong><br>${c.detay}</li>`).join('')}</ul>
-        <h2>Sloganlar</h2>
-        <ul>${data.slogans.map(s => `<li>${s}</li>`).join('')}</ul>
-        <h2>Reklamingo Ürünleri</h2>
-        <ul>${data.products.map(p => `<li>${p}</li>`).join('')}</ul>
+        <div class="card">
+          <h2>Kampanya Fikirleri</h2>
+          <ul>${data.campaigns.map(c => `<li><strong>${c.baslik}</strong><br>${c.detay}</li>`).join('')}</ul>
+        </div>
+        <div class="card">
+          <h2>Sloganlar</h2>
+          <ul>${data.slogans.map(s => `<li>${s}</li>`).join('')}</ul>
+        </div>
+        <div class="card">
+          <h2>Reklamingo Ürünleri</h2>
+          ${data.products.map(p => `
+            <div class="product">
+              <img src="/assets/${productImages[p] || 'placeholder.png'}" alt="${p}" />
+              <span>${p}</span>
+            </div>
+          `).join('')}
+        </div>
       `;
     });
   </script>
