@@ -28,9 +28,9 @@ app.post('/api/idea', async (req, res) => {
 
   try {
     const response = await axios.post(
-      'https://openrouter.ai/api/v1/chat/completions',
+      'https://api.groq.com/openai/v1/chat/completions',
       {
-        model: 'openchat/openchat-7b',
+        model: 'mixtral-8x7b-32768',
         messages: [
           { role: 'system', content: 'Sen yaratıcı bir reklam uzmanısın.' },
           { role: 'user', content: prompt }
@@ -38,7 +38,7 @@ app.post('/api/idea', async (req, res) => {
       },
       {
         headers: {
-          'Authorization': `Bearer ${process.env.OPENROUTER_API_KEY}`,
+          'Authorization': `Bearer ${process.env.GROQ_API_KEY}`,
           'Content-Type': 'application/json'
         }
       }
@@ -56,4 +56,4 @@ app.post('/api/idea', async (req, res) => {
   }
 });
 
-app.listen(port, () => console.log(`OpenRouter destekli server ${port} portunda çalışıyor`));
+app.listen(port, () => console.log(`Groq destekli sunucu ${port} portunda çalışıyor`));
