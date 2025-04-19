@@ -33,7 +33,7 @@
       const data = await res.json();
       resDiv.innerHTML = `
         <h2>Kampanya Fikirleri</h2>
-        <ul>${data.campaigns.map(c => `<li>${c}</li>`).join('')}</ul>
+        <ul>${data.campaigns.map(c => `<li><strong>${c.baslik}</strong><br>${c.detay}</li>`).join('')}</ul>
         <h2>Sloganlar</h2>
         <ul>${data.slogans.map(s => `<li>${s}</li>`).join('')}</ul>
         <h2>Reklamingo Ürünleri</h2>
