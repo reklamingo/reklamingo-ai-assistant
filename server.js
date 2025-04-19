@@ -30,7 +30,7 @@ app.post('/api/idea', async (req, res) => {
     const response = await axios.post(
       'https://api.groq.com/openai/v1/chat/completions',
       {
-        model: 'mixtral-8x7b-32768',
+        model: 'llama3-8b-8192',
         messages: [
           { role: 'system', content: 'Sen yaratıcı bir reklam uzmanısın.' },
           { role: 'user', content: prompt }
