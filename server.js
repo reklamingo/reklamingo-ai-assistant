@@ -1,16 +1,15 @@
 require('dotenv').config();
 const express = require('express');
 const bodyParser = require('body-parser');
-const { Configuration, OpenAIApi } = require('openai');
+const OpenAI = require('openai');
 const path = require('path');
 
 const app = express();
 const port = process.env.PORT || 3000;
 
-const configuration = new Configuration({
-  apiKey: process.env.OPENAI_API_KEY,
+const openai = new OpenAI({
+  apiKey: process.env.OPENAI_API_KEY
 });
-const openai = new OpenAIApi(configuration);
 
 app.use(bodyParser.json());
 app.use(express.static('public'));
@@ -39,7 +38,7 @@ Sadece geçerli bir JSON objesi döndür. Açıklama ekleme.
 `;
 
   try {
-    const completion = await openai.createChatCompletion({
+    const completion = await openai.chat.completions.create({
       model: 'gpt-3.5-turbo',
       messages: [
         { role: 'system', content: 'Sen yaratıcı bir reklam uzmanısın.' },
@@ -47,7 +46,7 @@ Sadece geçerli bir JSON objesi döndür. Açıklama ekleme.
       ]
     });
 
-    const rawText = completion.data.choices[0].message.content;
+    const rawText = completion.choices[0].message.content;
     console.log('YANIT:', rawText);
 
     const jsonMatch = rawText.match(/{[\s\S]*}/);
@@ -64,4 +63,4 @@ Sadece geçerli bir JSON objesi döndür. Açıklama ekleme.
   }
 });
 
-app.listen(port, () => console.log(`OpenAI destekli sunucu ${port} portunda çalışıyor`));
+app.listen(port, () => console.log(`OpenAI GPT-3.5 destekli sunucu ${port} portunda çalışıyor`));
