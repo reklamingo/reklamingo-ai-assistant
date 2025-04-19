@@ -1,11 +1,16 @@
 require('dotenv').config();
 const express = require('express');
 const bodyParser = require('body-parser');
-const axios = require('axios');
+const { Configuration, OpenAIApi } = require('openai');
 const path = require('path');
 
 const app = express();
 const port = process.env.PORT || 3000;
+
+const configuration = new Configuration({
+  apiKey: process.env.OPENAI_API_KEY,
+});
+const openai = new OpenAIApi(configuration);
 
 app.use(bodyParser.json());
 app.use(express.static('public'));
@@ -34,24 +39,15 @@ Sadece geçerli bir JSON objesi döndür. Açıklama ekleme.
 `;
 
   try {
-    const response = await axios.post(
-      'https://api.groq.com/openai/v1/chat/completions',
-      {
-        model: 'llama3-8b-8192',
-        messages: [
-          { role: 'system', content: 'Sen yaratıcı bir reklam uzmanısın.' },
-          { role: 'user', content: prompt }
-        ]
-      },
-      {
-        headers: {
-          'Authorization': `Bearer ${process.env.GROQ_API_KEY}`,
-          'Content-Type': 'application/json'
-        }
-      }
-    );
+    const completion = await openai.createChatCompletion({
+      model: 'gpt-3.5-turbo',
+      messages: [
+        { role: 'system', content: 'Sen yaratıcı bir reklam uzmanısın.' },
+        { role: 'user', content: prompt }
+      ]
+    });
 
-    const rawText = response.data.choices[0].message.content;
+    const rawText = completion.data.choices[0].message.content;
     console.log('YANIT:', rawText);
 
     const jsonMatch = rawText.match(/{[\s\S]*}/);
@@ -68,4 +64,4 @@ Sadece geçerli bir JSON objesi döndür. Açıklama ekleme.
   }
 });
 
-app.listen(port, () => console.log(`Groq destekli sunucu ${port} portunda çalışıyor`));
+app.listen(port, () => console.log(`OpenAI destekli sunucu ${port} portunda çalışıyor`));
