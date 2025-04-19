@@ -1,15 +1,18 @@
 <!DOCTYPE html>
 <html lang="tr">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
   <title>Reklamingo AI</title>
-  <link rel="stylesheet" href="style.css">
-  <link href="https://fonts.googleapis.com/css2?family=Quicksand&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="style.css" />
+  <link href="https://fonts.googleapis.com/css2?family=Quicksand&display=swap" rel="stylesheet" />
 </head>
 <body>
   <div class="container">
-    <h1>Reklamingo AI Fikir Asistanı</h1>
+    <header>
+      <img src="/assets/logo.png" alt="Reklamingo Logo" class="logo" />
+      <h1>Reklamingo AI Fikir Asistanı</h1>
+    </header>
     <form id="form">
       <input type="text" id="sector" placeholder="Sektörünüzü yazın..." required />
       <button type="submit">Fikir Üret</button>
@@ -31,16 +34,69 @@
     };
 
     const productLinks = {
-      "Seslendirme Hizmeti": "https://www.reklamingo.com.tr/product-page/seslendirme-hizmeti",
-      "Logo Tasarımı": "https://www.reklamingo.com.tr/product-page/logo-tasarimi",
-      "Kurumsal Kimlik Tasarımı": "https://www.reklamingo.com.tr/product-page/kurumsal-kimlik-tasarimi",
-      "Instagram için Gönderi Tasarımı": "https://www.reklamingo.com.tr/product-page/instagram-icin-gonderi-tasarimi",
-      "Instagram için Hikaye Tasarımı": "https://www.reklamingo.com.tr/product-page/instagram-icin-hikaye-tasarimi",
-      "Sunum Tasarımı": "https://www.reklamingo.com.tr/product-page/sunum-tasarimi",
-      "Broşür Tasarımı (A4 ve A5)": "https://www.reklamingo.com.tr/product-page/brosur-tasarimi-a4-ve-a5",
-      "Instagram Video Üretimi": "https://www.reklamingo.com.tr/product-page/sosyal-medya-icin-video-tasarimi",
-      "Sosyal Medya Post Tasarımı": "https://www.reklamingo.com.tr/product-page/instagram-5-hikaye-5-gonderi-tasarimi",
-    };
+  "Foreks Üzerine Baskı": "https://www.reklamingo.com.tr/product-page/foreks-uzerine-baski",
+  "X Banner - 80x180 cm.": "https://www.reklamingo.com.tr/product-page/x-banner---80x180-cm",
+  "Roll Up Banner - 100x200 cm.": "https://www.reklamingo.com.tr/product-page/roll-up-banner---100x200-cm",
+  "Premium Sıvama Kartvizit - 1000 Adet": "https://www.reklamingo.com.tr/product-page/premium-sivama-kartvizit---1000-adet",
+  "El İlanı - 1000 Adet": "https://www.reklamingo.com.tr/product-page/el-ilani---1000-adet",
+  "Branda Baskı": "https://www.reklamingo.com.tr/product-page/branda-baski",
+  "Diplomat Zarf - 1000 Adet": "https://www.reklamingo.com.tr/product-page/diplomat-zarf---1000-adet",
+  "A4 Antetli Kağıt - 1000 Adet": "https://www.reklamingo.com.tr/product-page/a4-antetli-kagit---1000-adet",
+  "Bez Çanta - Non Woven -  36x45 cm. - 2000 Adet": "https://www.reklamingo.com.tr/product-page/bez-canta---non-woven---36x45-cm---2000-adet",
+  "Sticker Baskı - 1000 Adet": "https://www.reklamingo.com.tr/product-page/sticker-baski---1000-adet",
+  "Amerikan Servis - 27x39 cm. -  1000 Adet": "https://www.reklamingo.com.tr/product-page/amerikan-servis---27x39-cm---1000-adet",
+  "Islak Mendil - 7x10 cm. - 2500 Adet": "https://www.reklamingo.com.tr/product-page/islak-mendil---7x10-cm---2500-adet",
+  "Ürün Etiketi - İpli - 1000 Adet": "https://www.reklamingo.com.tr/product-page/urun-etiketi---ipli---1000-adet",
+  "Metal Plaket - Kırmızı": "https://www.reklamingo.com.tr/product-page/metal-plaket---kirmizi",
+  "Kauçuk Tabanlı Bardak Altlığı - 1000 Adet": "https://www.reklamingo.com.tr/product-page/kaucuk-tabanli-bardak-altligi---1000-adet",
+  "Porselen Küllük - 12 Adet": "https://www.reklamingo.com.tr/product-page/porselen-kulluk---12-adet",
+  "Cricket Uzun Çakmak - 100 Adet": "https://www.reklamingo.com.tr/product-page/cricket-uzun-cakmak---100-adet",
+  "Telefon Tutacaklı Çakmak - 100 Adet": "https://www.reklamingo.com.tr/product-page/telefon-tutacakli-cakmak---100-adet",
+  "Küp Bloknot - 100 Adet": "https://www.reklamingo.com.tr/product-page/kup-bloknot---100-adet",
+  "Cepli Defter - 112 Yaprak - 14x21 cm. - 10 Adet": "https://www.reklamingo.com.tr/product-page/cepli-defter---112-yaprak---14x21-cm---10-adet",
+  "Termo Deri Defter - Lastikli - 80 Yaprak - 10 Adet": "https://www.reklamingo.com.tr/product-page/termo-deri-defter---lastikli---80-yaprak---10-adet",
+  "Oto Kokusu - 1000 Adet": "https://www.reklamingo.com.tr/product-page/oto-kokusu---1000-adet",
+  "Yelken Bayrak - 2 Adet": "https://www.reklamingo.com.tr/product-page/yelken-bayrak---2-adet",
+  "Cepli Karton Dosya - 1000 Adet": "https://www.reklamingo.com.tr/product-page/cepli-karton-dosya---1000-adet",
+  "Baskılı Karton Bardak - 3000 Adet": "https://www.reklamingo.com.tr/product-page/baskili-karton-bardak---3000-adet",
+  "Termos Mug - 350 ml. - 10 Adet (Paslanmaz Çelik)": "https://www.reklamingo.com.tr/product-page/termos-mug---350-ml---10-adet-paslanmaz-celik",
+  "Magnet Baskı - 1000 Adet": "https://www.reklamingo.com.tr/product-page/magnet-baski---1000-adet",
+  "Kitap Ayracı - 1000 Adet": "https://www.reklamingo.com.tr/product-page/kitap-ayraci---1000-adet",
+  "Naturel Kurşun Kalem - 500 Adet": "https://www.reklamingo.com.tr/product-page/naturel-kursun-kalem---500-adet",
+  "Magnetli Açacak - 100 Adet": "https://www.reklamingo.com.tr/product-page/magnetli-acacak---100-adet",
+  "Üçgen Masa Takvimi - 250 Adet": "https://www.reklamingo.com.tr/product-page/ucgen-masa-takvimi---250-adet",
+  "Puzzle A4 Boyutunda - 42 Parça - 10 Adet": "https://www.reklamingo.com.tr/product-page/puzzle-a4-boyutunda---42-parca---10-adet",
+  "Spiralli Defter - 100 Adet": "https://www.reklamingo.com.tr/product-page/spiralli-defter---100-adet",
+  "Şapka - 10 Adet": "https://www.reklamingo.com.tr/product-page/sapka---10-adet",
+  "Seramik Kupa - 350 ml. - 12 Adet": "https://www.reklamingo.com.tr/product-page/seramik-kupa---350-ml---12-adet",
+  "Kraft Karton Çanta 200 gr. - 250 Adet": "https://www.reklamingo.com.tr/product-page/kraft-karton-canta-200-gr---250-adet",
+  "Sosyal Medya Hesap Büyütme Paketi - Tiktok - Instagram": "https://www.reklamingo.com.tr/product-page/sosyal-medya-hesap-buyutme-paketi---tiktok---instagram",
+  "Hosting Hizmeti": "https://www.reklamingo.com.tr/product-page/hosting-hizmeti",
+  "Alan Adı Hizmeti": "https://www.reklamingo.com.tr/product-page/alan-adi-hizmeti",
+  "Ürün Fotoğrafı Düzenleme - 2 Adet": "https://www.reklamingo.com.tr/product-page/urun-fotografi-duzenleme---2-adet",
+  "Marka Tescil Danışmanlığı": "https://www.reklamingo.com.tr/product-page/marka-tescil-danismanligi",
+  "Seslendirme Hizmeti": "https://www.reklamingo.com.tr/product-page/seslendirme-hizmeti",
+  "Sunum Tasarımı": "https://www.reklamingo.com.tr/product-page/sunum-tasarimi",
+  "Özgün Şarkı Tasarımı": "https://www.reklamingo.com.tr/product-page/ozgun-sarki-tasarimi",
+  "Jenerik Müziği Tasarımı": "https://www.reklamingo.com.tr/product-page/jenerik-muzigi-tasarimi",
+  "Broşür Tasarımı (A4 ve A5)": "https://www.reklamingo.com.tr/product-page/brosur-tasarimi-a4-ve-a5",
+  "Kampanya Tasarımı": "https://www.reklamingo.com.tr/product-page/kampanya-tasarimi",
+  "Web Sitesi için Banner Tasarımı - 5 Adet": "https://www.reklamingo.com.tr/product-page/web-sitesi-icin-banner-tasarimi---5-adet",
+  "Web Sitesi için Banner Tasarımı": "https://www.reklamingo.com.tr/product-page/web-sitesi-icin-banner-tasarimi",
+  "İstenen Ebatta Özel Tasarım - Dijital Kullanım": "https://www.reklamingo.com.tr/product-page/istenen-ebatta-ozel-tasarim---dijital-kullanim",
+  "İstenen Ebatta Özel Tasarım - Basılabilir Tasarım": "https://www.reklamingo.com.tr/product-page/istenen-ebatta-ozel-tasarim---basilabilir-tasarim",
+  "Sosyal Medya için Video Tasarımı": "https://www.reklamingo.com.tr/product-page/sosyal-medya-icin-video-tasarimi",
+  "Facebook için Gönderi Tasarımı (2 Farklı Ebat)": "https://www.reklamingo.com.tr/product-page/facebook-icin-gonderi-tasarimi-2-farkli-ebat",
+  "Logo Tasarımı": "https://www.reklamingo.com.tr/product-page/logo-tasarimi",
+  "Kurumsal Kimlik Tasarımı": "https://www.reklamingo.com.tr/product-page/kurumsal-kimlik-tasarimi",
+  "Web Sitesi Tasarımı - One Page + Mobil Görünüm": "https://www.reklamingo.com.tr/product-page/web-sitesi-tasarimi---one-page-mobil-gorunum",
+  "Web Sitesi Tasarımı - 5 Sayfa + Mobil Görünüm": "https://www.reklamingo.com.tr/product-page/web-sitesi-tasarimi---5-sayfa-mobil-gorunum",
+  "Standart Kartvizit - 1000 Adet": "https://www.reklamingo.com.tr/product-page/standart-kartvizit---1000-adet",
+  "Instagram 5 Hikaye 5 Gönderi Tasarımı": "https://www.reklamingo.com.tr/product-page/instagram-5-hikaye-5-gonderi-tasarimi",
+  "Baskılı Plastik Tükenmez Kalem": "https://www.reklamingo.com.tr/product-page/baskili-plastik-tukenmez-kalem",
+  "Instagram için Hikaye Tasarımı": "https://www.reklamingo.com.tr/product-page/instagram-icin-hikaye-tasarimi",
+  "Instagram için Gönderi Tasarımı": "https://www.reklamingo.com.tr/product-page/instagram-icin-gonderi-tasarimi",
+};
 
     document.getElementById('form').addEventListener('submit', async (e) => {
       e.preventDefault();
