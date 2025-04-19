@@ -14,13 +14,23 @@ app.post('/api/idea', async (req, res) => {
   const { sector } = req.body;
 
   const prompt = `
-"${sector}" sektörü için bir reklam ajansı olarak aşağıdaki formatta yaratıcı fikirler üret:
+"${sector}" sektörü için bir reklam ajansı olarak aşağıdaki formatta yaratıcı fikirler üret.
+Her şey tamamen Türkçe olmalı. Ürünleri sadece aşağıdaki listeden seç:
+
+["Sosyal Medya Post Tasarımı", "Instagram Video Üretimi", "Sticker & Etiket Baskı", "Afiş Tasarımı", "Broşür & Katalog", "Logo & Kurumsal Kimlik", "Dijital Sunum Hazırlama", "Seslendirme Hizmeti", "Video Kurgu ve Montaj"]
+
+Yalnızca aşağıdaki JSON formatında çıktılar ver:
+
 {
-  "kampanyalar": ["...3 farklı kampanya fikri..."],
-  "sloganlar": ["...3-5 adet slogan..."],
-  "urunler": ["...Reklamingo ürünlerinden uygun olanlar..."]
+  "kampanyalar": [
+    { "baslik": "...", "detay": "..." },
+    ...
+  ],
+  "sloganlar": ["...", "..."],
+  "urunler": ["...", "..."]
 }
-Sadece geçerli bir JSON objesi döndür.
+
+Sadece geçerli bir JSON objesi döndür. Açıklama ekleme.
 `;
 
   try {
@@ -42,7 +52,7 @@ Sadece geçerli bir JSON objesi döndür.
     );
 
     const rawText = response.data.choices[0].message.content;
-    console.log('MODEL YANITI:', rawText);
+    console.log('YANIT:', rawText);
 
     const jsonMatch = rawText.match(/{[\s\S]*}/);
     const parsed = jsonMatch ? JSON.parse(jsonMatch[0]) : {};
@@ -54,7 +64,7 @@ Sadece geçerli bir JSON objesi döndür.
     });
   } catch (err) {
     console.error('HATA:', err.response?.data || err.message);
-    res.status(500).json({ error: 'Bir hata oluştu' });
+    res.status(500).json({ error: 'API hatası oluştu' });
   }
 });
 
