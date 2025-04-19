@@ -1,15 +1,11 @@
 require('dotenv').config();
 const express = require('express');
 const bodyParser = require('body-parser');
-const OpenAI = require('openai');
+const axios = require('axios');
 const path = require('path');
 
 const app = express();
 const port = process.env.PORT || 3000;
-
-const openai = new OpenAI({
-  apiKey: process.env.OPENAI_API_KEY
-});
 
 app.use(bodyParser.json());
 app.use(express.static('public'));
@@ -31,24 +27,33 @@ app.post('/api/idea', async (req, res) => {
   const prompt = `Bir reklam ajansı olarak "${sector}" sektörüne özel 3 kampanya fikri, 3-5 yaratıcı slogan ve bu sektöre uygun ürün önerilerini sırala.`;
 
   try {
-    const completion = await openai.chat.completions.create({
-      model: 'gpt-3.5-turbo',
-      messages: [
-        { role: 'system', content: 'Sen yaratıcı bir reklam uzmanısın.' },
-        { role: 'user', content: prompt }
-      ]
-    });
+    const response = await axios.post(
+      'https://openrouter.ai/api/v1/chat/completions',
+      {
+        model: 'mistralai/mistral-7b-instruct',
+        messages: [
+          { role: 'system', content: 'Sen yaratıcı bir reklam uzmanısın.' },
+          { role: 'user', content: prompt }
+        ]
+      },
+      {
+        headers: {
+          'Authorization': `Bearer ${process.env.OPENROUTER_API_KEY}`,
+          'Content-Type': 'application/json'
+        }
+      }
+    );
 
-    const text = completion.choices[0].message.content;
+    const text = response.data.choices[0].message.content;
     const campaigns = [...text.matchAll(/Kampanya [0-9]+: (.*)/g)].map(m => m[1]) || [];
     const slogans = [...text.matchAll(/Slogan: (.*)/g)].map(m => m[1]) || [];
     const products = productList.filter(p => text.toLowerCase().includes(p.toLowerCase().split(' ')[0]));
 
     res.json({ campaigns, slogans, products });
   } catch (err) {
-    console.error(err);
-    res.status(500).json({ error: 'Bir hata oluştu' });
+    console.error(err.response?.data || err.message);
+    res.status(500).json({ error: 'API hatası oluştu' });
   }
 });
 
-app.listen(port, () => console.log(`Server ${port} portunda çalışıyor`));
+app.listen(port, () => console.log(`OpenRouter destekli server ${port} portunda çalışıyor`));
