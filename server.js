@@ -30,7 +30,7 @@ app.post('/api/idea', async (req, res) => {
     const response = await axios.post(
       'https://openrouter.ai/api/v1/chat/completions',
       {
-        model: 'google/gemma-7b-it',
+        model: 'openchat/openchat-7b',
         messages: [
           { role: 'system', content: 'Sen yaratıcı bir reklam uzmanısın.' },
           { role: 'user', content: prompt }
