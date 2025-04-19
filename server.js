@@ -1,14 +1,15 @@
 require('dotenv').config();
 const express = require('express');
 const bodyParser = require('body-parser');
-const { Configuration, OpenAIApi } = require('openai');
+const OpenAI = require('openai');
 const path = require('path');
 
 const app = express();
 const port = process.env.PORT || 3000;
 
-const configuration = new Configuration({ apiKey: process.env.OPENAI_API_KEY });
-const openai = new OpenAIApi(configuration);
+const openai = new OpenAI({
+  apiKey: process.env.OPENAI_API_KEY
+});
 
 app.use(bodyParser.json());
 app.use(express.static('public'));
@@ -30,7 +31,7 @@ app.post('/api/idea', async (req, res) => {
   const prompt = `Bir reklam ajansı olarak "${sector}" sektörüne özel 3 kampanya fikri, 3-5 yaratıcı slogan ve bu sektöre uygun ürün önerilerini sırala.`;
 
   try {
-    const completion = await openai.createChatCompletion({
+    const completion = await openai.chat.completions.create({
       model: 'gpt-4',
       messages: [
         { role: 'system', content: 'Sen yaratıcı bir reklam uzmanısın.' },
@@ -38,7 +39,7 @@ app.post('/api/idea', async (req, res) => {
       ]
     });
 
-    const text = completion.data.choices[0].message.content;
+    const text = completion.choices[0].message.content;
     const campaigns = [...text.matchAll(/Kampanya [0-9]+: (.*)/g)].map(m => m[1]) || [];
     const slogans = [...text.matchAll(/Slogan: (.*)/g)].map(m => m[1]) || [];
     const products = productList.filter(p => text.toLowerCase().includes(p.toLowerCase().split(' ')[0]));
