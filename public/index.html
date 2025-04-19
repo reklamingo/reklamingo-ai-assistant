@@ -30,6 +30,18 @@
       "Video Kurgu ve Montaj": "kurgu.png"
     };
 
+    const productLinks = {
+      "Seslendirme Hizmeti": "https://www.reklamingo.com.tr/product-page/seslendirme-hizmeti",
+      "Logo Tasarımı": "https://www.reklamingo.com.tr/product-page/logo-tasarimi",
+      "Kurumsal Kimlik Tasarımı": "https://www.reklamingo.com.tr/product-page/kurumsal-kimlik-tasarimi",
+      "Instagram için Gönderi Tasarımı": "https://www.reklamingo.com.tr/product-page/instagram-icin-gonderi-tasarimi",
+      "Instagram için Hikaye Tasarımı": "https://www.reklamingo.com.tr/product-page/instagram-icin-hikaye-tasarimi",
+      "Sunum Tasarımı": "https://www.reklamingo.com.tr/product-page/sunum-tasarimi",
+      "Broşür Tasarımı (A4 ve A5)": "https://www.reklamingo.com.tr/product-page/brosur-tasarimi-a4-ve-a5",
+      "Instagram Video Üretimi": "https://www.reklamingo.com.tr/product-page/sosyal-medya-icin-video-tasarimi",
+      "Sosyal Medya Post Tasarımı": "https://www.reklamingo.com.tr/product-page/instagram-5-hikaye-5-gonderi-tasarimi",
+    };
+
     document.getElementById('form').addEventListener('submit', async (e) => {
       e.preventDefault();
       const sector = document.getElementById('sector').value;
@@ -56,10 +68,12 @@
         <div class="card">
           <h2>Reklamingo Ürünleri</h2>
           ${data.products.map(p => `
-            <div class="product">
-              <img src="/assets/${productImages[p] || 'placeholder.png'}" alt="${p}" />
-              <span>${p}</span>
-            </div>
+            <a href="${productLinks[p] || '#'}" target="_blank">
+              <div class="product">
+                <img src="/assets/${productImages[p] || 'placeholder.png'}" alt="${p}" />
+                <span>${p}</span>
+              </div>
+            </a>
           `).join('')}
         </div>
       `;
