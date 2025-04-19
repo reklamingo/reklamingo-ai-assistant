@@ -1,0 +1,24 @@
+body {
+  font-family: 'Quicksand', sans-serif;
+  background: #fff;
+  color: #003e92;
+  padding: 2rem;
+  text-align: center;
+}
+input, button {
+  padding: 1rem;
+  margin: 1rem;
+  border-radius: 8px;
+  border: 1px solid #ccc;
+  font-size: 1rem;
+}
+button {
+  background-color: #3ecf00;
+  color: white;
+  border: none;
+  cursor: pointer;
+}
+#results ul {
+  list-style: none;
+  padding: 0;
+}

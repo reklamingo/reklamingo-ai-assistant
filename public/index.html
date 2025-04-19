@@ -1,0 +1,45 @@
+<!DOCTYPE html>
+<html lang="tr">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Reklamingo AI</title>
+  <link rel="stylesheet" href="style.css">
+  <link href="https://fonts.googleapis.com/css2?family=Quicksand&display=swap" rel="stylesheet">
+</head>
+<body>
+  <div class="container">
+    <h1>Reklamingo AI Fikir Asistanı</h1>
+    <form id="form">
+      <input type="text" id="sector" placeholder="Sektörünüzü yazın..." required />
+      <button type="submit">Fikir Üret</button>
+    </form>
+    <div id="results"></div>
+  </div>
+
+  <script>
+    document.getElementById('form').addEventListener('submit', async (e) => {
+      e.preventDefault();
+      const sector = document.getElementById('sector').value;
+      const resDiv = document.getElementById('results');
+      resDiv.innerHTML = 'Yükleniyor...';
+
+      const res = await fetch('/api/idea', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ sector })
+      });
+
+      const data = await res.json();
+      resDiv.innerHTML = `
+        <h2>Kampanya Fikirleri</h2>
+        <ul>${data.campaigns.map(c => `<li>${c}</li>`).join('')}</ul>
+        <h2>Sloganlar</h2>
+        <ul>${data.slogans.map(s => `<li>${s}</li>`).join('')}</ul>
+        <h2>Reklamingo Ürünleri</h2>
+        <ul>${data.products.map(p => `<li>${p}</li>`).join('')}</ul>
+      `;
+    });
+  </script>
+</body>
+</html>
