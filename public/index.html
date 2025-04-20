@@ -93,6 +93,9 @@
     .product {
       margin-bottom: 1rem;
     }
+    .product span {
+      color: #ffffff;
+    }
   </style>
 </head>
 <body>
@@ -140,7 +143,6 @@
         if (key && !matchedProducts.includes(key)) matchedProducts.push(key);
       });
 
-      // Eğer hiç eşleşen ürün yoksa, ilk ürünü fallback olarak ekle
       if (matchedProducts.length === 0) {
         matchedProducts.push(Object.keys(productLinks)[0]);
       }
