@@ -91,17 +91,7 @@
       color: #3ecf00;
     }
     .product {
-      display: flex;
-      align-items: center;
-      gap: 1rem;
       margin-bottom: 1rem;
-    }
-    .product img {
-      width: 48px;
-      height: 48px;
-      object-fit: contain;
-      border-radius: 8px;
-      background: #fff;
     }
   </style>
 </head>
@@ -118,17 +108,14 @@
     <div class="grid" id="results"></div>
   </div>
 
+  <script src="/assets/product-links.js"></script>
   <script>
-    const productLinks = {
-      "Logo Tasarımı": "https://www.reklamingo.com.tr/product-page/logo-tasarimi",
-      "Kurumsal Kimlik Tasarımı": "https://www.reklamingo.com.tr/product-page/kurumsal-kimlik-tasarimi",
-      "Sunum Tasarımı": "https://www.reklamingo.com.tr/product-page/sunum-tasarimi",
-      "Broşür Tasarımı (A4 ve A5)": "https://www.reklamingo.com.tr/product-page/brosur-tasarimi-a4-ve-a5",
-      "Instagram için Gönderi Tasarımı": "https://www.reklamingo.com.tr/product-page/instagram-icin-gonderi-tasarimi",
-      "Instagram için Hikaye Tasarımı": "https://www.reklamingo.com.tr/product-page/instagram-icin-hikaye-tasarimi",
-      "Sosyal Medya için Video Tasarımı": "https://www.reklamingo.com.tr/product-page/sosyal-medya-icin-video-tasarimi",
-      "Seslendirme Hizmeti": "https://www.reklamingo.com.tr/product-page/seslendirme-hizmeti"
-    };
+    function normalize(text) {
+      return text.toLowerCase()
+        .replace(/ğ/g, "g").replace(/ü/g, "u").replace(/ş/g, "s")
+        .replace(/ı/g, "i").replace(/ö/g, "o").replace(/ç/g, "c")
+        .replace(/[^a-z0-9 ]/g, "").trim();
+    }
 
     document.getElementById('form').addEventListener('submit', async (e) => {
       e.preventDefault();
@@ -144,6 +131,20 @@
 
       const data = await res.json();
 
+      // Kampanyalarla ürünleri eşleştir
+      let matchedProducts = [];
+      data.campaigns.forEach(camp => {
+        const key = Object.keys(productLinks).find(prod =>
+          normalize(camp.baslik).includes(normalize(prod)) || normalize(prod).includes(normalize(camp.baslik))
+        );
+        if (key && !matchedProducts.includes(key)) matchedProducts.push(key);
+      });
+
+      // Eğer hiç eşleşen ürün yoksa, ilk ürünü fallback olarak ekle
+      if (matchedProducts.length === 0) {
+        matchedProducts.push(Object.keys(productLinks)[0]);
+      }
+
       resDiv.innerHTML = `
         <div class="card">
           <h2>Kampanya Fikirleri</h2>
@@ -151,17 +152,12 @@
         </div>
         <div class="card">
           <h2>Reklamingo Ürünleri</h2>
-          ${data.products.map(p => {
-            const matchedKey = Object.keys(productLinks).find(key =>
-              key.toLowerCase().includes(p.toLowerCase()) || p.toLowerCase().includes(key.toLowerCase())
-            );
-            if (!matchedKey) return '';
-            const url = productLinks[matchedKey];
+          ${matchedProducts.map(name => {
+            const url = productLinks[name];
             return `
-              <a href="${url}" target="_blank">
+              <a href="https://${url}" target="_blank">
                 <div class="product">
-                  <img src="/assets/placeholder.png" alt="${p}" />
-                  <span>${p}</span>
+                  <span>${name}</span>
                 </div>
               </a>
             `;
