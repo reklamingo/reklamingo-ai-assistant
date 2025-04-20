@@ -60,19 +60,19 @@
       margin-bottom: 2rem;
     }
     input {
-      padding: 0.75rem;
+      padding: 0.75rem 1.25rem;
       font-size: 1rem;
-      border-radius: 8px;
+      border-radius: 999px;
       border: none;
       width: 300px;
     }
     button {
-      padding: 0.75rem 1.25rem;
+      padding: 0.75rem 1.5rem;
       background-color: #3ecf00;
-      color: #000;
+      color: #fff;
       font-weight: bold;
       border: none;
-      border-radius: 8px;
+      border-radius: 999px;
       cursor: pointer;
     }
     .grid {
@@ -155,7 +155,8 @@
             const matchedKey = Object.keys(productLinks).find(key =>
               key.toLowerCase().includes(p.toLowerCase()) || p.toLowerCase().includes(key.toLowerCase())
             );
-            const url = matchedKey ? productLinks[matchedKey] : "#";
+            if (!matchedKey) return '';
+            const url = productLinks[matchedKey];
             return `
               <a href="${url}" target="_blank">
                 <div class="product">
