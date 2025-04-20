@@ -3,20 +3,94 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-  <title>Reklamingo AI</title>
+  <title>Yapay Zeka Fikir Asistanı</title>
   <link rel="stylesheet" href="style.css" />
   <link href="https://fonts.googleapis.com/css2?family=Quicksand&display=swap" rel="stylesheet" />
   <style>
-    .logo {
-      height: 50px;
-      object-fit: contain;
-      margin-bottom: 0.5rem;
+    body {
+      background: radial-gradient(ellipse at top, #003e92 0%, #000000 100%);
+      color: #ffffff;
+      font-family: 'Quicksand', sans-serif;
+      margin: 0;
+      padding: 2rem;
+      min-height: 100vh;
+    }
+    .container {
+      max-width: 1200px;
+      margin: 0 auto;
     }
     header {
       display: flex;
       flex-direction: column;
       align-items: center;
-      gap: 0.25rem;
+      margin-bottom: 2rem;
+    }
+    .logo {
+      height: 60px;
+      margin-bottom: 1rem;
+    }
+    h1 {
+      font-size: 2rem;
+      text-align: center;
+      animation: glow 2s ease-in-out infinite alternate;
+    }
+    @keyframes glow {
+      from {
+        text-shadow: 0 0 10px #3ecf00, 0 0 20px #3ecf00;
+      }
+      to {
+        text-shadow: 0 0 20px #3ecf00, 0 0 30px #3ecf00;
+      }
+    }
+    form {
+      display: flex;
+      justify-content: center;
+      gap: 1rem;
+      margin-bottom: 2rem;
+    }
+    input {
+      padding: 0.75rem;
+      font-size: 1rem;
+      border-radius: 8px;
+      border: none;
+      width: 300px;
+    }
+    button {
+      padding: 0.75rem 1.25rem;
+      background-color: #3ecf00;
+      color: #000;
+      font-weight: bold;
+      border: none;
+      border-radius: 8px;
+      cursor: pointer;
+    }
+    .grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+      gap: 2rem;
+    }
+    .card {
+      background-color: #111827;
+      border-radius: 12px;
+      padding: 1rem;
+      border: 1px solid #3ecf00;
+    }
+    .card h2 {
+      margin-top: 0;
+      color: #3ecf00;
+    }
+    .product {
+      display: flex;
+      align-items: center;
+      gap: 1rem;
+      margin-bottom: 1rem;
+    }
+    .product img {
+      width: 48px;
+      height: 48px;
+      object-fit: contain;
+      border-radius: 8px;
+      background: #fff;
     }
   </style>
 </head>
@@ -47,15 +121,15 @@
     };
 
     const productLinks = {
-      "X Banner - 80x180 cm.": "https://www.reklamingo.com.tr/product-page/x-banner---80x180-cm",
       "Logo Tasarımı": "https://www.reklamingo.com.tr/product-page/logo-tasarimi",
-      "Sosyal Medya için Video Tasarımı": "https://www.reklamingo.com.tr/product-page/sosyal-medya-icin-video-tasarimi",
-      "Sunum Tasarımı": "https://www.reklamingo.com.tr/product-page/sunum-tasarimi",
-      "Seslendirme Hizmeti": "https://www.reklamingo.com.tr/product-page/seslendirme-hizmeti",
-      "Instagram için Gönderi Tasarımı": "https://www.reklamingo.com.tr/product-page/instagram-icin-gonderi-tasarimi",
       "Kurumsal Kimlik Tasarımı": "https://www.reklamingo.com.tr/product-page/kurumsal-kimlik-tasarimi",
+      "Sunum Tasarımı": "https://www.reklamingo.com.tr/product-page/sunum-tasarimi",
       "Broşür Tasarımı (A4 ve A5)": "https://www.reklamingo.com.tr/product-page/brosur-tasarimi-a4-ve-a5",
-      "Instagram için Hikaye Tasarımı": "https://www.reklamingo.com.tr/product-page/instagram-icin-hikaye-tasarimi"
+      "Instagram için Gönderi Tasarımı": "https://www.reklamingo.com.tr/product-page/instagram-icin-gonderi-tasarimi",
+      "Instagram için Hikaye Tasarımı": "https://www.reklamingo.com.tr/product-page/instagram-icin-hikaye-tasarimi",
+      "Sosyal Medya için Video Tasarımı": "https://www.reklamingo.com.tr/product-page/sosyal-medya-icin-video-tasarimi",
+      "Seslendirme Hizmeti": "https://www.reklamingo.com.tr/product-page/seslendirme-hizmeti",
+      "X Banner - 80x180 cm.": "https://www.reklamingo.com.tr/product-page/x-banner---80x180-cm"
     };
 
     document.getElementById('form').addEventListener('submit', async (e) => {
@@ -78,13 +152,11 @@
           <ul>${data.campaigns.map(c => `<li><strong>${c.baslik}</strong><br>${c.detay}</li>`).join('')}</ul>
         </div>
         <div class="card">
-          <h2>Sloganlar</h2>
-          <ul>${data.slogans.map(s => `<li>${s}</li>`).join('')}</ul>
-        </div>
-        <div class="card">
           <h2>Reklamingo Ürünleri</h2>
           ${data.products.map(p => {
-            const matchedKey = Object.keys(productLinks).find(key => p.includes(key));
+            const matchedKey = Object.keys(productLinks).find(key =>
+              key.toLowerCase().includes(p.toLowerCase())
+            );
             const url = matchedKey ? productLinks[matchedKey] : "#";
             const img = productImages[p] || 'placeholder.png';
             return `
