@@ -33,14 +33,25 @@
       font-size: 2rem;
       text-align: center;
       animation: glow 2s ease-in-out infinite alternate;
+      position: relative;
     }
     @keyframes glow {
-      from {
-        text-shadow: 0 0 10px #3ecf00, 0 0 20px #3ecf00;
-      }
-      to {
-        text-shadow: 0 0 20px #3ecf00, 0 0 30px #3ecf00;
-      }
+      from { text-shadow: 0 0 10px #3ecf00, 0 0 20px #3ecf00; }
+      to   { text-shadow: 0 0 20px #3ecf00, 0 0 30px #3ecf00; }
+    }
+    h1::after {
+      content: '';
+      display: block;
+      height: 3px;
+      width: 120px;
+      margin: 6px auto 0;
+      background: linear-gradient(90deg, transparent, #3ecf00, transparent);
+      animation: lightmove 2s infinite;
+    }
+    @keyframes lightmove {
+      0%   { transform: translateX(-50px); opacity: 0; }
+      50%  { opacity: 1; }
+      100% { transform: translateX(50px); opacity: 0; }
     }
     form {
       display: flex;
@@ -108,18 +119,6 @@
   </div>
 
   <script>
-    const productImages = {
-      "Sosyal Medya Post Tasarımı": "sosyalmedya.png",
-      "Instagram Video Üretimi": "video.png",
-      "Sticker & Etiket Baskı": "sticker.png",
-      "Afiş Tasarımı": "afis.png",
-      "Broşür & Katalog": "brosur.png",
-      "Logo & Kurumsal Kimlik": "logo.png",
-      "Dijital Sunum Hazırlama": "sunum.png",
-      "Seslendirme Hizmeti": "ses.png",
-      "Video Kurgu ve Montaj": "kurgu.png"
-    };
-
     const productLinks = {
       "Logo Tasarımı": "https://www.reklamingo.com.tr/product-page/logo-tasarimi",
       "Kurumsal Kimlik Tasarımı": "https://www.reklamingo.com.tr/product-page/kurumsal-kimlik-tasarimi",
@@ -128,9 +127,10 @@
       "Instagram için Gönderi Tasarımı": "https://www.reklamingo.com.tr/product-page/instagram-icin-gonderi-tasarimi",
       "Instagram için Hikaye Tasarımı": "https://www.reklamingo.com.tr/product-page/instagram-icin-hikaye-tasarimi",
       "Sosyal Medya için Video Tasarımı": "https://www.reklamingo.com.tr/product-page/sosyal-medya-icin-video-tasarimi",
-      "Seslendirme Hizmeti": "https://www.reklamingo.com.tr/product-page/seslendirme-hizmeti",
-      "X Banner - 80x180 cm.": "https://www.reklamingo.com.tr/product-page/x-banner---80x180-cm"
+      "Seslendirme Hizmeti": "https://www.reklamingo.com.tr/product-page/seslendirme-hizmeti"
     };
+
+    const productImages = {};
 
     document.getElementById('form').addEventListener('submit', async (e) => {
       e.preventDefault();
@@ -155,14 +155,13 @@
           <h2>Reklamingo Ürünleri</h2>
           ${data.products.map(p => {
             const matchedKey = Object.keys(productLinks).find(key =>
-              key.toLowerCase().includes(p.toLowerCase())
+              p.toLowerCase().includes(key.toLowerCase())
             );
             const url = matchedKey ? productLinks[matchedKey] : "#";
-            const img = productImages[p] || 'placeholder.png';
             return `
               <a href="${url}" target="_blank">
                 <div class="product">
-                  <img src="/assets/${img}" alt="${p}" />
+                  <img src="/assets/placeholder.png" alt="${p}" />
                   <span>${p}</span>
                 </div>
               </a>
