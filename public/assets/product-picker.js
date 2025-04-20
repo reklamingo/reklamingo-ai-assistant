@@ -1,11 +1,11 @@
 
-function getRandomProducts(productLinks, count = 3) {
-  const keys = Object.keys(productLinks);
-  const selected = [];
-  while (selected.length < count && keys.length > 0) {
-    const randomIndex = Math.floor(Math.random() * keys.length);
-    const item = keys.splice(randomIndex, 1)[0];
-    selected.push({ name: item, link: productLinks[item] });
-  }
-  return selected;
+function getSmartProductSuggestions(productArray, count = 3) {
+  const shuffled = productArray.slice().sort(() => 0.5 - Math.random());
+
+  // Foreks Baskı'yı sona taşı
+  const filtered = shuffled.filter(p => !p.name.toLowerCase().includes("foreks"));
+  const foreks = shuffled.filter(p => p.name.toLowerCase().includes("foreks"));
+  const finalList = [...filtered, ...foreks];
+
+  return finalList.slice(0, count);
 }
