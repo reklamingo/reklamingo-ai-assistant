@@ -6,6 +6,22 @@
   <title>Yapay Zeka Fikir Asistanı</title>
   <link href="https://fonts.googleapis.com/css2?family=Quicksand&display=swap" rel="stylesheet" />
   <style>
+.glow-effect {
+  animation: pulse-glow 2s infinite;
+  box-shadow: 0 0 10px #3ecf00, 0 0 20px #3ecf00;
+}
+@keyframes pulse-glow {
+  0% {
+    box-shadow: 0 0 10px #3ecf00;
+  }
+  50% {
+    box-shadow: 0 0 20px #3ecf00, 0 0 30px #3ecf00;
+  }
+  100% {
+    box-shadow: 0 0 10px #3ecf00;
+  }
+}
+
     body {
       background: radial-gradient(ellipse at top, #003e92 0%, #000000 100%);
       color: #ffffff;
@@ -106,8 +122,8 @@
       <h1>Yapay Zeka Fikir Asistanı</h1>
     </header>
     <form id="form">
-      <input type="text" id="sector" placeholder="İşletmen için parlak fikirler. Sektörünü yaz." required />
-      <button type="submit">Fikir Üret</button>
+      <input type="text" id="sector" placeholder="Sektörünüzü yazın..." required />
+      <button type="submit" id="generateButton" class="glow-effect">Fikir Üret</button>
     </form>
     <div class="grid" id="results"></div>
   </div>
@@ -148,6 +164,7 @@
     }
 
     document.getElementById('form').addEventListener('submit', async (e) => {
+  document.getElementById("generateButton").classList.remove("glow-effect");
       e.preventDefault();
       const sector = document.getElementById('sector').value;
       const resDiv = document.getElementById('results');
@@ -203,7 +220,7 @@
 </div>
 
 <footer style="text-align: center; color: #ffffff; margin-top: 4rem; font-size: 0.9rem;">
-  Bu hizmet Reklamingo tarafından sağlanmaktadır. © 2035 reklamingo!
+  Bu hizmet Reklamingo tarafından sağlanmaktadır
 </footer>
 
 </body>
