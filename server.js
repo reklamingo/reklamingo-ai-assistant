@@ -1,66 +1,60 @@
-require('dotenv').config();
-const express = require('express');
-const bodyParser = require('body-parser');
-const OpenAI = require('openai');
-const path = require('path');
+
+const express = require("express");
+const bodyParser = require("body-parser");
+const { OpenAI } = require("openai");
+require("dotenv").config();
 
 const app = express();
-const port = process.env.PORT || 3000;
+app.use(bodyParser.json());
+app.use(express.static("public"));
 
 const openai = new OpenAI({
   apiKey: process.env.OPENAI_API_KEY
 });
 
-app.use(bodyParser.json());
-app.use(express.static('public'));
-
-app.post('/api/idea', async (req, res) => {
+app.post("/api/idea", async (req, res) => {
   const { sector } = req.body;
 
   const prompt = `
-"${sector}" sektörü için bir reklam ajansı olarak aşağıdaki formatta yaratıcı fikirler üret.
-Her şey tamamen Türkçe olmalı. Ürünleri sadece aşağıdaki listeden seç:
+Bir pazarlama danışmanı olarak hareket et.
 
-["Sosyal Medya Post Tasarımı", "Instagram Video Üretimi", "Sticker & Etiket Baskı", "Afiş Tasarımı", "Broşür & Katalog", "Logo & Kurumsal Kimlik", "Dijital Sunum Hazırlama", "Seslendirme Hizmeti", "Video Kurgu ve Montaj"]
+Görev: Aşağıdaki sektör için 3 yaratıcı ve uygulanabilir kampanya fikri öner.
 
-Yalnızca aşağıdaki JSON formatında çıktılar ver:
+SEKTÖR: ${sector}
 
-{
-  "kampanyalar": [
-    { "baslik": "...", "detay": "..." },
-    ...
-  ],
-  "sloganlar": ["...", "..."],
-  "urunler": ["...", "..."]
-}
+Kurallar:
+- Reklam ajansı, grafik tasarım, logo veya dijital ürün odaklı fikirler VERME.
+- Sadece sektörün kendi gerçek ihtiyaçlarına uygun kampanya fikirleri üret.
+- Her fikir için kısa bir başlık ve 1-2 cümlelik açıklama yaz.
+- Eğlenceli, yenilikçi ama uygulanabilir fikirler öner.
 
-Sadece geçerli bir JSON objesi döndür. Açıklama ekleme.
+Yanıt formatı (JSON):
+[
+  { "baslik": "...", "detay": "..." },
+  ...
+]
 `;
 
   try {
-    const completion = await openai.chat.completions.create({
-      model: 'gpt-3.5-turbo',
-      messages: [
-        { role: 'system', content: 'Sen yaratıcı bir reklam uzmanısın.' },
-        { role: 'user', content: prompt }
-      ]
+    const chatCompletion = await openai.chat.completions.create({
+      model: "gpt-3.5-turbo",
+      messages: [{ role: "user", content: prompt }],
+      temperature: 0.7
     });
 
-    const rawText = completion.choices[0].message.content;
-    console.log('YANIT:', rawText);
+    const responseText = chatCompletion.choices[0].message.content;
 
-    const jsonMatch = rawText.match(/{[\s\S]*}/);
-    const parsed = jsonMatch ? JSON.parse(jsonMatch[0]) : {};
+    const campaigns = JSON.parse(responseText);
+    const products = campaigns.map(c => c.baslik); // örnek amaçlı
 
-    res.json({
-      campaigns: parsed.kampanyalar || [],
-      slogans: parsed.sloganlar || [],
-      products: parsed.urunler || []
-    });
-  } catch (err) {
-    console.error('HATA:', err.response?.data || err.message);
-    res.status(500).json({ error: 'API hatası oluştu' });
+    res.json({ campaigns, products });
+  } catch (error) {
+    console.error(error);
+    res.status(500).send("Hata oluştu");
   }
 });
 
-app.listen(port, () => console.log(`OpenAI GPT-3.5 destekli sunucu ${port} portunda çalışıyor`));
+const port = process.env.PORT || 3000;
+app.listen(port, () => {
+  console.log(`Server is running on port ${port}`);
+});
