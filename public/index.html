@@ -4,7 +4,6 @@
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
   <title>Yapay Zeka Fikir Asistanı</title>
-  <link rel="stylesheet" href="style.css" />
   <link href="https://fonts.googleapis.com/css2?family=Quicksand&display=swap" rel="stylesheet" />
   <style>
     body {
@@ -15,20 +14,9 @@
       padding: 2rem;
       min-height: 100vh;
     }
-    .container {
-      max-width: 1200px;
-      margin: 0 auto;
-    }
-    header {
-      display: flex;
-      flex-direction: column;
-      align-items: center;
-      margin-bottom: 2rem;
-    }
-    .logo {
-      height: 60px;
-      margin-bottom: 1rem;
-    }
+    .container { max-width: 1200px; margin: 0 auto; }
+    header { display: flex; flex-direction: column; align-items: center; margin-bottom: 2rem; }
+    .logo { height: 60px; margin-bottom: 1rem; }
     h1 {
       font-size: 2rem;
       text-align: center;
@@ -86,15 +74,28 @@
       padding: 1rem;
       border: 1px solid #3ecf00;
     }
-    .card h2 {
-      margin-top: 0;
-      color: #3ecf00;
+    .card h2 { margin-top: 0; color: #3ecf00; }
+    .product { margin-bottom: 1rem; }
+    .product span { color: #ffffff; }
+
+    .loading {
+      display: flex;
+      justify-content: center;
+      margin: 2rem 0;
     }
-    .product {
-      margin-bottom: 1rem;
+    .loading .dot {
+      width: 10px;
+      height: 10px;
+      margin: 0 5px;
+      border-radius: 50%;
+      background-color: #3ecf00;
+      animation: bounce 1.2s infinite ease-in-out;
     }
-    .product span {
-      color: #ffffff;
+    .loading .dot:nth-child(2) { animation-delay: 0.2s; }
+    .loading .dot:nth-child(3) { animation-delay: 0.4s; }
+    @keyframes bounce {
+      0%, 80%, 100% { transform: scale(0); }
+      40% { transform: scale(1); }
     }
   </style>
 </head>
@@ -111,58 +112,49 @@
     <div class="grid" id="results"></div>
   </div>
 
-  <script src="/assets/product-links.js"></script>
-<script>
-function normalize(text) {
-  return text.toLowerCase()
-    .replace(/ğ/g, "g").replace(/ü/g, "u").replace(/ş/g, "s")
-    .replace(/ı/g, "i").replace(/ö/g, "o").replace(/ç/g, "c")
-    .replace(/[^a-z0-9 ]/g, "").trim();
-}
-
-function getBestMatchingProducts(campaigns, productLinks) {
-  const normalizedProducts = Object.keys(productLinks).map(name => ({
-    name,
-    norm: normalize(name)
-  }));
-
-  const matched = new Set();
-
-  campaigns.forEach(camp => {
-    const words = normalize(camp.baslik).split(" ");
-    let bestScore = 0;
-    let bestProduct = null;
-
-    normalizedProducts.forEach(prod => {
-      const score = words.reduce((acc, word) => acc + (prod.norm.includes(word) ? 1 : 0), 0);
-      if (score > bestScore) {
-        bestScore = score;
-        bestProduct = prod.name;
-      }
-    });
-
-    if (bestProduct) matched.add(bestProduct);
-  });
-
-  // fallback
-  if (matched.size === 0) matched.add(Object.keys(productLinks)[0]);
-
-  return Array.from(matched);
-}
-</script>
   <script>
+    const productLinks = {
+      "Foreks Baskı": "www.reklamingo.com.tr/product-page/foreks-baski",
+      "X Banner - 80x180 cm.": "www.reklamingo.com.tr/product-page/x-banner-80x180-cm"
+    };
+
     function normalize(text) {
-      return text.toLowerCase()
-        .replace(/ğ/g, "g").replace(/ü/g, "u").replace(/ş/g, "s")
-        .replace(/ı/g, "i").replace(/ö/g, "o").replace(/ç/g, "c")
-        .replace(/[^a-z0-9 ]/g, "").trim();
+      return text.toLowerCase().replace(/[ğüşıöç]/g, m =>
+        ({ğ:"g",ü:"u",ş:"s",ı:"i",ö:"o",ç:"c"}[m])
+      ).replace(/[^a-z0-9 ]/g, "").trim();
+    }
+
+    function getBestMatchingProducts(campaigns, productLinks) {
+      const normalizedProducts = Object.keys(productLinks).map(name => ({
+        name,
+        norm: normalize(name)
+      }));
+      const matched = new Set();
+      campaigns.forEach(camp => {
+        const words = normalize(camp.baslik).split(" ");
+        let bestScore = 0;
+        let bestProduct = null;
+        normalizedProducts.forEach(prod => {
+          const score = words.reduce((acc, word) => acc + (prod.norm.includes(word) ? 1 : 0), 0);
+          if (score > bestScore) {
+            bestScore = score;
+            bestProduct = prod.name;
+          }
+        });
+        if (bestProduct) matched.add(bestProduct);
+      });
+      if (matched.size === 0) matched.add(Object.keys(productLinks)[0]);
+      return Array.from(matched);
     }
 
     document.getElementById('form').addEventListener('submit', async (e) => {
       e.preventDefault();
       const sector = document.getElementById('sector').value;
       const resDiv = document.getElementById('results');
-      resDiv.innerHTML = 'Yükleniyor...';
+      resDiv.innerHTML = `
+        <div class="loading">
+          <span class="dot"></span><span class="dot"></span><span class="dot"></span>
+        </div>`;
 
       const res = await fetch('/api/idea', {
         method: 'POST',
@@ -171,19 +163,7 @@ function getBestMatchingProducts(campaigns, productLinks) {
       });
 
       const data = await res.json();
-
-      // Kampanyalarla ürünleri eşleştir
       let matchedProducts = getBestMatchingProducts(data.campaigns, productLinks);
-      data.campaigns.forEach(camp => {
-        const key = Object.keys(productLinks).find(prod =>
-          normalize(camp.baslik).includes(normalize(prod)) || normalize(prod).includes(normalize(camp.baslik))
-        );
-        if (key && !matchedProducts.includes(key)) matchedProducts.push(key);
-      });
-
-      if (matchedProducts.length === 0) {
-        matchedProducts.push(Object.keys(productLinks)[0]);
-      }
 
       resDiv.innerHTML = `
         <div class="card">
@@ -195,12 +175,9 @@ function getBestMatchingProducts(campaigns, productLinks) {
           ${matchedProducts.map(name => {
             const url = productLinks[name];
             return `
-              <a href="https://${url}" target="_blank">
-                <div class="product">
-                  <span>${name}</span>
-                </div>
-              </a>
-            `;
+              <a href="//${url}" target="_blank">
+                <div class="product"><span>${name}</span></div>
+              </a>`;
           }).join('')}
         </div>
       `;
