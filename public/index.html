@@ -1,30 +1,81 @@
+
 <!DOCTYPE html>
 <html lang="tr">
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-  <title>Fikir Asistanı - Reklamingo</title>
-  <link href="https://fonts.googleapis.com/css2?family=Quicksand:wght@400;600&display=swap" rel="stylesheet">
-  <link rel="stylesheet" href="style.css" />
+  <title>Fikir Asistanı</title>
+  <style>
+    body {
+      background-color: #003e92;
+      font-family: 'Quicksand', sans-serif;
+      color: white;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      padding-top: 60px;
+    }
+    h1 {
+      font-size: 2.5rem;
+    }
+    input {
+      padding: 1rem;
+      font-size: 1rem;
+      border-radius: 50px;
+      border: none;
+      width: 300px;
+    }
+    button {
+      background-color: #3ecf00;
+      border: none;
+      border-radius: 50px;
+      color: white;
+      font-weight: bold;
+      font-size: 1rem;
+      padding: 0.8rem 2rem;
+      margin-left: 1rem;
+      cursor: pointer;
+    }
+    #results {
+      margin-top: 30px;
+      padding: 1rem;
+      border: 2px solid #3ecf00;
+      border-radius: 10px;
+      width: 80%;
+      max-width: 600px;
+      display: none;
+    }
+  </style>
 </head>
 <body>
-  <img src="reklamingo-logo-white.png" alt="Reklamingo Logo" class="logo" />
-  <h1 class="title">Fikir Asistanı</h1>
-  <div class="glow-bar"></div>
-  <form id="ideaForm">
-    <input type="text" id="sectorInput" placeholder="Sektör girin..." required />
-    <button type="submit" id="generateButton">Fikir Üret</button>
-  </form>
-  <div id="loadingBar"></div>
-  <div id="resultContainer" class="hidden">
-    <div class="result-box">
-      <h2 class="green-text">Kampanya Fikirleri</h2>
-      <ul id="campaignList"></ul>
-    </div>
+  <img src="https://reklamingo.com.tr/_next/image?url=%2Flogo-white.png&w=256&q=75" height="40" />
+  <h1>Fikir Asistanı</h1>
+  <div>
+    <input type="text" id="sectorInput" placeholder="Sektör girin..." />
+    <button onclick="generateIdea()">Fikir Üret</button>
   </div>
-  <footer>
-    <p>Bu hizmet Reklamingo tarafından sağlanmaktadır.</p>
-  </footer>
-  <script src="script.js"></script>
+  <div id="results">
+    <h2 style="color:#3ecf00;">Kampanya Fikirleri</h2>
+    <ul id="ideas" style="color:white;"></ul>
+  </div>
+  <script>
+    async function generateIdea() {
+      const sector = document.getElementById("sectorInput").value;
+      const res = await fetch("/api/idea", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ sector })
+      });
+      const data = await res.json();
+      const ideasBox = document.getElementById("ideas");
+      ideasBox.innerHTML = "";
+      if (data && Array.isArray(data)) {
+        data.forEach(item => {
+          ideasBox.innerHTML += `<li><b>${item.baslik}</b>: ${item.detay}</li>`;
+        });
+        document.getElementById("results").style.display = "block";
+      }
+    }
+  </script>
 </body>
 </html>

@@ -1,14 +1,24 @@
-import express from "express";
-import cors from "cors";
-import dotenv from "dotenv";
-import OpenAI from "openai";
 
-dotenv.config();
+import express from "express";
+import OpenAI from "openai";
+import cors from "cors";
+import path from "path";
+import { fileURLToPath } from "url";
+
 const app = express();
+const port = process.env.PORT || 10000;
+const openai = new OpenAI({ apiKey: process.env.OPENAI_API_KEY });
+
+const __filename = fileURLToPath(import.meta.url);
+const __dirname = path.dirname(__filename);
+
 app.use(cors());
 app.use(express.json());
+app.use(express.static(path.join(__dirname, "public")));
 
-const openai = new OpenAI({ apiKey: process.env.OPENAI_API_KEY });
+app.get("/", (req, res) => {
+  res.sendFile(path.join(__dirname, "public", "index.html"));
+});
 
 app.post("/api/idea", async (req, res) => {
   const { sector } = req.body;
@@ -33,18 +43,21 @@ Yanıt formatı (JSON):
 `;
 
   try {
-    const chatCompletion = await openai.chat.completions.create({
+    const completion = await openai.chat.completions.create({
       model: "gpt-3.5-turbo",
       messages: [{ role: "user", content: prompt }],
       temperature: 0.7
     });
-    const message = chatCompletion.choices[0].message.content;
-    res.json({ ideas: JSON.parse(message) });
-  } catch (error) {
-    console.error("Hata:", error.message);
-    res.status(500).json({ error: "Bir hata oluştu." });
+
+    const response = completion.choices[0].message.content.trim();
+    const json = JSON.parse(response);
+    res.json(json);
+  } catch (e) {
+    console.error(e);
+    res.status(500).json({ error: "Yanıt alınamadı." });
   }
 });
 
-const PORT = process.env.PORT || 10000;
-app.listen(PORT, () => console.log(`Server running on port ${PORT}`));
+app.listen(port, () => {
+  console.log("Server running on port", port);
+});
