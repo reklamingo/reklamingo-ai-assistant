@@ -1,0 +1,76 @@
+
+body {
+  margin: 0;
+  font-family: 'Quicksand', sans-serif;
+  background-color: #003e92;
+  color: white;
+  text-align: center;
+}
+.logo {
+  width: 180px;
+  margin-top: 20px;
+}
+.title {
+  font-size: 2rem;
+  margin-bottom: 5px;
+}
+.glow-bar {
+  width: 120px;
+  height: 5px;
+  margin: 0 auto 20px;
+  background: linear-gradient(90deg, #3ecf00, #003e92);
+  animation: glowMove 2s infinite linear;
+}
+@keyframes glowMove {
+  0% { background-position: 0 0; }
+  100% { background-position: 120px 0; }
+}
+form {
+  display: flex;
+  justify-content: center;
+  gap: 1rem;
+  margin-bottom: 20px;
+}
+#sectorInput {
+  padding: 1rem;
+  width: 300px;
+  border-radius: 50px;
+  border: none;
+}
+#generateButton {
+  padding: 1rem 2rem;
+  border-radius: 50px;
+  border: none;
+  background-color: #3ecf00;
+  color: white;
+  font-weight: bold;
+  cursor: pointer;
+  box-shadow: 0 0 10px #3ecf00;
+  transition: box-shadow 0.3s ease;
+}
+#generateButton.clicked {
+  box-shadow: none;
+}
+.result-box {
+  border: 2px solid #3ecf00;
+  padding: 1rem;
+  margin: 1rem auto;
+  width: 80%;
+  max-width: 600px;
+}
+.green-text {
+  color: #3ecf00;
+}
+.hidden {
+  display: none;
+}
+#loadingBar {
+  height: 5px;
+  background-color: #3ecf00;
+  width: 0%;
+  transition: width 1s ease;
+}
+footer {
+  margin-top: 2rem;
+  font-size: 0.9rem;
+}

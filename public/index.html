@@ -1,0 +1,30 @@
+<!DOCTYPE html>
+<html lang="tr">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Fikir Asistanı - Reklamingo</title>
+  <link href="https://fonts.googleapis.com/css2?family=Quicksand:wght@400;600&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="style.css" />
+</head>
+<body>
+  <img src="reklamingo-logo-white.png" alt="Reklamingo Logo" class="logo" />
+  <h1 class="title">Fikir Asistanı</h1>
+  <div class="glow-bar"></div>
+  <form id="ideaForm">
+    <input type="text" id="sectorInput" placeholder="Sektör girin..." required />
+    <button type="submit" id="generateButton">Fikir Üret</button>
+  </form>
+  <div id="loadingBar"></div>
+  <div id="resultContainer" class="hidden">
+    <div class="result-box">
+      <h2 class="green-text">Kampanya Fikirleri</h2>
+      <ul id="campaignList"></ul>
+    </div>
+  </div>
+  <footer>
+    <p>Bu hizmet Reklamingo tarafından sağlanmaktadır.</p>
+  </footer>
+  <script src="script.js"></script>
+</body>
+</html>
