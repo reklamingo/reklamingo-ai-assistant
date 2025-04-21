@@ -20,25 +20,20 @@ app.post("/api/idea", async (req, res) => {
 
   try {
     const chatCompletion = await openai.chat.completions.create({
-      model: "gpt-3.5-turbo",
+      model: "gpt-4",
       messages: [{ role: "user", content: prompt }],
       temperature: 0.7
     });
 
     const message = chatCompletion.choices[0].message.content;
-
-    if (!message.startsWith("[")) {
-      return res.status(500).json({ error: "Yanıt JSON değil", raw: message });
-    }
-
     res.status(200).json({ message });
   } catch (error) {
     console.error("API Hatası:", error);
-    res.status(500).json({ error: "Sunucu hatası", detay: error.message });
+    res.status(500).json({ error: "Bir hata oluştu", detay: error.message });
   }
 });
 
 const port = process.env.PORT || 3000;
 app.listen(port, () => {
-  console.log(`Server çalışıyor: ${port}`);
+  console.log(`✅ Reset sunucu çalışıyor: ${port}`);
 });

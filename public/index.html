@@ -6,24 +6,20 @@
     <title>Reklamingo AI</title>
     <style>
       body {
-        font-family: 'Segoe UI', sans-serif;
-        background: url('./assets/bg.png') no-repeat center center fixed;
-        background-size: cover;
-        color: white;
         margin: 0;
-        padding: 0;
+        font-family: 'Segoe UI', sans-serif;
+        background: linear-gradient(135deg, #001e40, #003e92);
+        color: white;
         text-align: center;
-      }
-      .container {
-        padding: 4rem 1rem;
-        background-color: rgba(0, 0, 0, 0.6);
         min-height: 100vh;
       }
+      .container {
+        padding: 4rem 2rem;
+      }
       h1 {
-        font-size: 2.5rem;
+        font-size: 2.8rem;
         margin-bottom: 2rem;
-        color: #3ecf00;
-        text-shadow: 0 0 15px #3ecf00;
+        text-shadow: 0 0 10px #3ecf00;
       }
       input {
         padding: 1rem;
@@ -36,36 +32,36 @@
         padding: 1rem 2rem;
         border-radius: 999px;
         border: none;
-        background-color: #3ecf00;
+        background: linear-gradient(90deg, #3ecf00, #00bcd4, #3ecf00);
+        background-size: 200%;
+        animation: glow 2s linear infinite;
         font-weight: bold;
-        cursor: pointer;
         color: white;
+        cursor: pointer;
+      }
+      @keyframes glow {
+        0% { background-position: 0%; }
+        100% { background-position: 200%; }
       }
       #results {
         margin-top: 2rem;
-        text-align: left;
         max-width: 700px;
         margin-left: auto;
         margin-right: auto;
-        background: rgba(255,255,255,0.1);
+        text-align: left;
+        background-color: rgba(255,255,255,0.1);
         padding: 2rem;
         border-radius: 1rem;
-      }
-      .loader {
-        color: #3ecf00;
-        font-size: 1.2rem;
-        margin-top: 2rem;
       }
     </style>
   </head>
   <body>
     <div class="container">
-      <h1>Fikir Asistanı</h1>
+      <h1>Yapay Zeka Fikir Asistanı</h1>
       <form id="idea-form">
-        <input type="text" id="sector" placeholder="Sektör girin..." />
+        <input type="text" id="sector" placeholder="Sektörünüz..." required />
         <button type="submit">Fikir Üret</button>
       </form>
-      <div class="loader" id="loading" style="display: none;">Yükleniyor...</div>
       <div id="results"></div>
     </div>
 
@@ -73,49 +69,28 @@
       document.getElementById("idea-form").addEventListener("submit", async (e) => {
         e.preventDefault();
         const sector = document.getElementById("sector").value;
-        document.getElementById("loading").style.display = "block";
+        document.getElementById("results").innerHTML = "Yükleniyor...";
+
+        const response = await fetch("/api/idea", {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({ sector })
+        });
+
+        const data = await response.json();
         document.getElementById("results").innerHTML = "";
 
         try {
-          const response = await fetch("/api/idea", {
-            method: "POST",
-            headers: {
-              "Content-Type": "application/json",
-            },
-            body: JSON.stringify({ sector }),
-          });
-
-          const data = await response.json();
-          console.log("Gelen cevap:", data.message);
-
-          let parsed;
-          try {
-            parsed = JSON.parse(data.message);
-          } catch (err) {
-            document.getElementById("results").innerHTML =
-              "<p>Yanıt JSON formatında değil.</p>";
-            console.error("JSON parse hatası:", err);
-            return;
-          }
-
-          const html = parsed
-            .map(
-              (item) => `
-                <div style="margin-bottom: 2rem;">
-                  <h3>${item.baslik}</h3>
-                  <p>${item.detay}</p>
-                  <strong>Ürün: ${item["Uygun Ürün"]}</strong>
-                </div>
-              `
-            )
-            .join("");
-
-          document.getElementById("results").innerHTML = html;
-        } catch (err) {
-          console.error("API hatası:", err);
-          document.getElementById("results").innerHTML = "<p>Hata oluştu.</p>";
-        } finally {
-          document.getElementById("loading").style.display = "none";
+          const ideas = JSON.parse(data.message);
+          document.getElementById("results").innerHTML = ideas.map(i => `
+            <div style="margin-bottom: 1.5rem;">
+              <h3>${i.baslik}</h3>
+              <p>${i.detay}</p>
+            </div>
+          `).join("");
+        } catch (e) {
+          document.getElementById("results").innerHTML = "<p>Yanıt beklenen formatta değil.</p>";
+          console.error(e);
         }
       });
     </script>
