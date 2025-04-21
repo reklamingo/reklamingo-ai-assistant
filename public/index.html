@@ -1,32 +1,38 @@
+
 <!DOCTYPE html>
 <html lang="tr">
 <head>
   <meta charset="UTF-8" />
   <title>Fikir Asistanı</title>
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <link rel="stylesheet" href="style.css" />
-  <link href="https://fonts.googleapis.com/css2?family=Quicksand&display=swap" rel="stylesheet" />
 </head>
 <body>
-  <div class="container">
-    <img src="logo.png" class="logo" alt="Logo" />
-    <h1>Fikir Asistanı</h1>
-    <div class="glow-line"></div>
-    <form id="ideaForm">
-      <input type="text" placeholder="Sektör girin..." />
-      <button id="submitBtn">Fikir Üret</button>
-    </form>
-    <div class="loader" id="loader"></div>
-    <div class="results hidden" id="results">
-      <h2>Kampanya Fikirleri</h2>
-      <ul>
-        <li><strong>Örnek Başlık</strong><br>Açıklama metni burada yer alır.</li>
-      </ul>
-    </div>
-    <a href="https://reklamingo.com.tr" target="_blank">
-      <button class="cta">Reklamingo’ya Geç</button>
-    </a>
-    <footer>Bu hizmet Reklamingo tarafından sağlanmaktadır.</footer>
-  </div>
+  <h1>Fikir Asistanı</h1>
+  <input type="text" id="sectorInput" placeholder="Sektör girin..." />
+  <button onclick="generateIdeas()">Fikir Üret</button>
+  <div id="result"></div>
+
+  <script>
+    async function generateIdeas() {
+      const sector = document.getElementById('sectorInput').value;
+      const resDiv = document.getElementById('result');
+      resDiv.innerHTML = "Yükleniyor...";
+      try {
+        const response = await fetch("http://localhost:10000/api/idea", {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({ sector })
+        });
+        const data = await response.json();
+        if (data.success) {
+          resDiv.innerHTML = "<ul>" + data.ideas.map(i => `<li><strong>${i.baslik}</strong><br>${i.detay}</li>`).join("") + "</ul>";
+        } else {
+          resDiv.innerText = "Bir hata oluştu.";
+        }
+      } catch (err) {
+        resDiv.innerText = "İstek gönderilirken hata oluştu.";
+      }
+    }
+  </script>
 </body>
 </html>
