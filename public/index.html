@@ -1,20 +1,64 @@
+
 <!DOCTYPE html>
 <html lang="tr">
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
   <title>Fikir Asistanı</title>
-  <link rel="stylesheet" href="style.css" />
-  <link rel="icon" href="assets/favicon.png" type="image/png" />
-  <link href="https://fonts.googleapis.com/css2?family=Quicksand&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="style.css"/>
 </head>
-<body>
-  <img src="assets/favicon.png" class="logo" alt="Reklamingo Logo" />
+<body style="background-color:#003e92; font-family: 'Quicksand', sans-serif; text-align: center; padding-top: 50px; color: white;">
+
+  <img src="favicon.png" alt="Reklamingo Logo" style="width: 120px; margin-bottom: 20px;">
   <h1>Fikir Asistanı</h1>
-  <div class="highlight-bar"></div>
-  <div class="input-container">
-    <input type="text" id="sectorInput" placeholder="Sektör girin..." />
-    <button id="generateBtn" class="glow">Fikir Üret</button>
-  </div>
+  <form>
+    <input id="sector" type="text" placeholder="Sektör girin..." style="padding: 10px; border-radius: 25px; width: 300px;" />
+    <button type="submit" style="padding: 10px 20px; background-color: #3ecf00; color: white; border: none; border-radius: 25px; cursor: pointer; margin-left: 10px;">Fikir Üret</button>
+  </form>
+
+  <div id="result" style="margin-top: 40px;"></div>
+
+  <footer style="margin-top: 60px; color: #ccc; font-size: 0.9rem;">Bu hizmet Reklamingo tarafından sağlanmaktadır.</footer>
+
+  <script>
+    const form = document.querySelector("form");
+    const input = document.getElementById("sector");
+    const resultBox = document.getElementById("result");
+
+    form.addEventListener("submit", async (e) => {
+      e.preventDefault();
+      const sector = input.value.trim();
+
+      if (!sector) return;
+
+      resultBox.innerHTML = "Yükleniyor...";
+
+      try {
+        const res = await fetch("/api/idea", {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json"
+          },
+          body: JSON.stringify({ sector })
+        });
+
+        const data = await res.json();
+
+        if (Array.isArray(data)) {
+          resultBox.innerHTML = \`
+            <h2 style="color:#3ecf00;">Kampanya Fikirleri</h2>
+            <ul style="color:white; text-align:left; display:inline-block;">
+              \${data.map(item => \`<li><strong>\${item.baslik}</strong>: \${item.detay}</li>\`).join("")}
+            </ul>
+          \`;
+        } else {
+          resultBox.innerHTML = "Beklenmeyen yanıt formatı.";
+        }
+      } catch (err) {
+        resultBox.innerHTML = "Bir hata oluştu.";
+        console.error(err);
+      }
+    });
+  </script>
 </body>
 </html>
