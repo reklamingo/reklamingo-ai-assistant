@@ -1,41 +1,72 @@
 
 <!DOCTYPE html>
-<html>
+<html lang="tr">
   <head>
-    <title>Reklamingo AI</title>
     <meta charset="UTF-8" />
+    <title>Reklamingo AI</title>
     <style>
       body {
-        font-family: Arial;
-        background-color: #0a1d3b;
+        font-family: 'Segoe UI', sans-serif;
+        background: url('bg.png') no-repeat center center fixed;
+        background-size: cover;
         color: white;
+        margin: 0;
+        padding: 0;
         text-align: center;
-        padding: 2rem;
       }
-      input, button {
+      .container {
+        padding: 4rem 1rem;
+        background-color: rgba(0, 0, 0, 0.6);
+        min-height: 100vh;
+      }
+      h1 {
+        font-size: 2.5rem;
+        margin-bottom: 2rem;
+        color: #3ecf00;
+        text-shadow: 0 0 15px #3ecf00;
+      }
+      input {
         padding: 1rem;
-        border-radius: 50px;
+        width: 300px;
+        border-radius: 999px;
         border: none;
-        margin: 0.5rem;
-        font-size: 1rem;
+        margin-right: 1rem;
+      }
+      button {
+        padding: 1rem 2rem;
+        border-radius: 999px;
+        border: none;
+        background-color: #3ecf00;
+        font-weight: bold;
+        cursor: pointer;
       }
       #results {
         margin-top: 2rem;
+        text-align: left;
+        max-width: 700px;
+        margin-left: auto;
+        margin-right: auto;
+        background: rgba(255,255,255,0.1);
+        padding: 2rem;
+        border-radius: 1rem;
       }
       .loader {
         color: #3ecf00;
-        margin-top: 1rem;
+        font-size: 1.2rem;
+        margin-top: 2rem;
       }
     </style>
   </head>
   <body>
-    <h1>Fikir Asistanı</h1>
-    <form id="idea-form">
-      <input type="text" id="sector" placeholder="Sektör girin..." />
-      <button type="submit">Fikir Üret</button>
-    </form>
-    <div class="loader" id="loading" style="display: none;">Yükleniyor...</div>
-    <div id="results"></div>
+    <div class="container">
+      <h1>Fikir Asistanı</h1>
+      <form id="idea-form">
+        <input type="text" id="sector" placeholder="Sektör girin..." />
+        <button type="submit">Fikir Üret</button>
+      </form>
+      <div class="loader" id="loading" style="display: none;">Yükleniyor...</div>
+      <div id="results"></div>
+    </div>
 
     <script>
       document.getElementById("idea-form").addEventListener("submit", async (e) => {
@@ -69,12 +100,12 @@
           const html = parsed
             .map(
               (item) => `
-              <div style="margin-bottom: 2rem;">
-                <h3>${item.baslik}</h3>
-                <p>${item.detay}</p>
-                <strong>Ürün: ${item["Uygun Ürün"]}</strong>
-              </div>
-            `
+                <div style="margin-bottom: 2rem;">
+                  <h3>${item.baslik}</h3>
+                  <p>${item.detay}</p>
+                  <strong>Ürün: ${item["Uygun Ürün"]}</strong>
+                </div>
+              `
             )
             .join("");
 
