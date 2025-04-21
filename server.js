@@ -26,14 +26,16 @@ app.post("/api/idea", async (req, res) => {
     });
 
     const message = chatCompletion.choices[0].message.content;
+    console.log("GPT Cevabı:\n", message);
+
     res.status(200).json({ message });
   } catch (error) {
-    console.error("API Error:", error);
-    res.status(500).json({ error: "Bir hata oluştu" });
+    console.error("API Hatası:", error);
+    res.status(500).json({ error: "Bir şeyler ters gitti.", detay: error.message });
   }
 });
 
 const port = process.env.PORT || 3000;
 app.listen(port, () => {
-  console.log(`Server running on port ${port}`);
+  console.log(`Server çalışıyor: ${port}`);
 });
