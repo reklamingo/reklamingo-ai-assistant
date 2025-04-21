@@ -1,22 +1,24 @@
-
 import express from "express";
-import OpenAI from "openai";
 import cors from "cors";
+import dotenv from "dotenv";
+import OpenAI from "openai";
 
+dotenv.config();
 const app = express();
-app.use(express.json());
 app.use(cors());
-app.use(express.static("public"));
+app.use(express.json());
 
 const openai = new OpenAI({ apiKey: process.env.OPENAI_API_KEY });
 
 app.post("/api/idea", async (req, res) => {
   const { sector } = req.body;
-
   const prompt = `
 Bir pazarlama danışmanı olarak hareket et.
+
 Görev: Aşağıdaki sektör için 3 yaratıcı ve uygulanabilir kampanya fikri öner.
+
 SEKTÖR: ${sector}
+
 Kurallar:
 - Reklam ajansı, grafik tasarım, logo veya dijital ürün odaklı fikirler VERME.
 - Sadece sektörün kendi gerçek ihtiyaçlarına uygun kampanya fikirleri üret.
@@ -31,18 +33,18 @@ Yanıt formatı (JSON):
 `;
 
   try {
-    const chat = await openai.chat.completions.create({
+    const chatCompletion = await openai.chat.completions.create({
       model: "gpt-3.5-turbo",
       messages: [{ role: "user", content: prompt }],
       temperature: 0.7
     });
-
-    const response = JSON.parse(chat.choices[0].message.content);
-    res.json(response);
-  } catch (e) {
-    res.status(500).json({ error: "İstek başarısız." });
+    const message = chatCompletion.choices[0].message.content;
+    res.json({ ideas: JSON.parse(message) });
+  } catch (error) {
+    console.error("Hata:", error.message);
+    res.status(500).json({ error: "Bir hata oluştu." });
   }
 });
 
-const PORT = process.env.PORT || 3000;
-app.listen(PORT, () => console.log("Server is running"));
+const PORT = process.env.PORT || 10000;
+app.listen(PORT, () => console.log(`Server running on port ${PORT}`));
