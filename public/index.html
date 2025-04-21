@@ -1,32 +1,32 @@
 <!DOCTYPE html>
 <html lang="tr">
 <head>
-    <meta charset="UTF-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Fikir Asistanı</title>
-    <link href="https://fonts.googleapis.com/css2?family=Quicksand&display=swap" rel="stylesheet" />
-    <link rel="stylesheet" href="style.css" />
+  <meta charset="UTF-8" />
+  <title>Fikir Asistanı</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <link rel="stylesheet" href="style.css" />
+  <link href="https://fonts.googleapis.com/css2?family=Quicksand&display=swap" rel="stylesheet" />
 </head>
 <body>
-    <div class="container">
-        <img src="logo-white.png" alt="Reklamingo Logo" class="logo" />
-        <h1 class="title">Fikir Asistanı</h1>
-        <div class="title-glow"></div>
-        <form id="ideaForm">
-            <input type="text" id="sectorInput" placeholder="Sektör girin..." />
-            <button type="submit" id="generateBtn">Fikir Üret</button>
-        </form>
-        <div id="loadingBar" class="loading-bar hidden"></div>
-        <div id="results" class="results hidden">
-            <div class="card">
-                <h2>Kampanya Fikirleri</h2>
-                <ul id="ideasList"></ul>
-            </div>
-        </div>
-        <footer>
-            <p>Bu hizmet Reklamingo tarafından sağlanmaktadır.</p>
-        </footer>
+  <div class="container">
+    <img src="logo.png" class="logo" alt="Logo" />
+    <h1>Fikir Asistanı</h1>
+    <div class="glow-line"></div>
+    <form id="ideaForm">
+      <input type="text" placeholder="Sektör girin..." />
+      <button id="submitBtn">Fikir Üret</button>
+    </form>
+    <div class="loader" id="loader"></div>
+    <div class="results hidden" id="results">
+      <h2>Kampanya Fikirleri</h2>
+      <ul>
+        <li><strong>Örnek Başlık</strong><br>Açıklama metni burada yer alır.</li>
+      </ul>
     </div>
-    <script src="script.js"></script>
+    <a href="https://reklamingo.com.tr" target="_blank">
+      <button class="cta">Reklamingo’ya Geç</button>
+    </a>
+    <footer>Bu hizmet Reklamingo tarafından sağlanmaktadır.</footer>
+  </div>
 </body>
 </html>
