@@ -1,58 +1,80 @@
 
 body {
+  margin: 0;
   font-family: 'Quicksand', sans-serif;
-  background: #fff;
-  color: #003e92;
-  padding: 2rem;
+  background: linear-gradient(180deg, #003e92 0%, #00275e 100%);
+  color: white;
   text-align: center;
 }
-input, button {
-  padding: 1rem;
-  margin: 1rem;
-  border-radius: 8px;
-  border: 1px solid #ccc;
-  font-size: 1rem;
-}
-button {
-  background-color: #3ecf00;
-  color: white;
-  border: none;
-  cursor: pointer;
-}
-.grid {
-  display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
-  gap: 1.5rem;
+
+h1 {
+  font-size: 2.5rem;
   margin-top: 2rem;
 }
-.card {
-  border: 1px solid #ccc;
-  border-radius: 12px;
+
+input[type="text"] {
   padding: 1rem;
-  background: #f9f9f9;
-  text-align: left;
+  width: 300px;
+  border-radius: 9999px;
+  border: none;
+  font-size: 1rem;
 }
-.card h2 {
-  margin-top: 0;
-  color: #003e92;
+
+button {
+  padding: 0.75rem 1.5rem;
+  background-color: #3ecf00;
+  color: white;
+  font-weight: bold;
+  border: none;
+  border-radius: 9999px;
+  font-size: 1rem;
+  cursor: pointer;
+  transition: all 0.3s ease-in-out;
 }
-.card ul {
-  list-style: none;
-  padding: 0;
+
+button#generateBtn.glow {
+  box-shadow: 0 0 10px #3ecf00, 0 0 20px #3ecf00, 0 0 40px #3ecf00;
+  animation: glow-pulse 2s infinite;
 }
-.card ul li {
-  margin-bottom: 1rem;
+
+@keyframes glow-pulse {
+  0% { box-shadow: 0 0 5px #3ecf00; }
+  50% { box-shadow: 0 0 20px #3ecf00, 0 0 40px #3ecf00; }
+  100% { box-shadow: 0 0 5px #3ecf00; }
 }
-.product {
-  display: flex;
-  align-items: center;
-  gap: 0.75rem;
-  margin-bottom: 1rem;
+
+#title {
+  font-size: 2rem;
+  margin-top: 1rem;
+  position: relative;
+  display: inline-block;
 }
-.product img {
-  width: 50px;
-  height: 50px;
-  object-fit: contain;
-  border-radius: 8px;
-  border: 1px solid #ddd;
+
+#title::after {
+  content: "";
+  display: block;
+  width: 100%;
+  height: 4px;
+  background: radial-gradient(circle, #3ecf00 0%, transparent 70%);
+  animation: shine 2s infinite ease-in-out;
+  position: absolute;
+  left: 0;
+  bottom: -10px;
+}
+
+@keyframes shine {
+  0% { opacity: 0.2; transform: scaleX(0.9); }
+  50% { opacity: 1; transform: scaleX(1.1); }
+  100% { opacity: 0.2; transform: scaleX(0.9); }
+}
+
+footer {
+  margin-top: 4rem;
+  color: white;
+  font-size: 0.9rem;
+}
+
+#results {
+  margin-top: 3rem;
+  display: none;
 }
