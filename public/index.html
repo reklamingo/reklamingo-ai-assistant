@@ -1,76 +1,100 @@
 
 <!DOCTYPE html>
 <html lang="tr">
-  <head>
-    <meta charset="UTF-8" />
-    <title>Reklamingo AI</title>
-    <style>
-      body {
-        margin: 0;
-        font-family: 'Segoe UI', sans-serif;
-        background: linear-gradient(135deg, #001e40, #003e92);
-        color: white;
-        text-align: center;
-        min-height: 100vh;
-      }
-      .container {
-        padding: 4rem 2rem;
-      }
-      h1 {
-        font-size: 2.8rem;
-        margin-bottom: 2rem;
-        text-shadow: 0 0 10px #3ecf00;
-      }
-      input {
-        padding: 1rem;
-        width: 300px;
-        border-radius: 999px;
-        border: none;
-        margin-right: 1rem;
-      }
-      button {
-        padding: 1rem 2rem;
-        border-radius: 999px;
-        border: none;
-        background: linear-gradient(90deg, #3ecf00, #00bcd4, #3ecf00);
-        background-size: 200%;
-        animation: glow 2s linear infinite;
-        font-weight: bold;
-        color: white;
-        cursor: pointer;
-      }
-      @keyframes glow {
-        0% { background-position: 0%; }
-        100% { background-position: 200%; }
-      }
-      #results {
-        margin-top: 2rem;
-        max-width: 700px;
-        margin-left: auto;
-        margin-right: auto;
-        text-align: left;
-        background-color: rgba(255,255,255,0.1);
-        padding: 2rem;
-        border-radius: 1rem;
-      }
-    </style>
-  </head>
-  <body>
-    <div class="container">
-      <h1>Yapay Zeka Fikir Asistanı</h1>
-      <form id="idea-form">
-        <input type="text" id="sector" placeholder="Sektörünüz..." required />
-        <button type="submit">Fikir Üret</button>
-      </form>
-      <div id="results"></div>
-    </div>
+<head>
+  <meta charset="UTF-8" />
+  <title>Fikir Asistanı</title>
+  <link href="https://fonts.googleapis.com/css2?family=Quicksand:wght@400;600;700&display=swap" rel="stylesheet">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <style>
+    body {
+      margin: 0;
+      font-family: 'Quicksand', sans-serif;
+      background: linear-gradient(135deg, #001e40, #003e92);
+      color: white;
+      text-align: center;
+      padding: 2rem 1rem;
+    }
 
-    <script>
-      document.getElementById("idea-form").addEventListener("submit", async (e) => {
-        e.preventDefault();
-        const sector = document.getElementById("sector").value;
-        document.getElementById("results").innerHTML = "Yükleniyor...";
+    h1 {
+      font-size: 2rem;
+      margin-bottom: 1.5rem;
+      text-shadow: 0 0 10px #3ecf00;
+    }
 
+    form {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 1rem;
+      margin-bottom: 2rem;
+    }
+
+    input {
+      padding: 1rem;
+      width: 90%;
+      max-width: 400px;
+      border-radius: 999px;
+      border: none;
+      font-size: 1rem;
+    }
+
+    button {
+      padding: 1rem 2rem;
+      border-radius: 999px;
+      border: none;
+      background: #3ecf00;
+      font-weight: bold;
+      color: white;
+      font-size: 1rem;
+      box-shadow: 0 0 10px #3ecf00;
+      transition: background 0.3s;
+    }
+
+    #results {
+      background-color: #1c1c1c;
+      border: 2px solid #3ecf00;
+      border-radius: 1rem;
+      padding: 1.5rem;
+      max-width: 500px;
+      margin: 0 auto;
+      text-align: left;
+    }
+
+    #results h3 {
+      color: white;
+      margin-bottom: 0.5rem;
+    }
+
+    #results p {
+      color: #ddd;
+      margin-top: 0;
+      margin-bottom: 1rem;
+    }
+
+    #loading {
+      margin-top: 2rem;
+    }
+  </style>
+</head>
+<body>
+  <h1>Fikir Asistanı</h1>
+  <form id="idea-form">
+    <input type="text" id="sector" placeholder="Sektör girin..." required />
+    <button type="submit">Fikir Üret</button>
+  </form>
+
+  <div id="loading" style="display: none;">Yükleniyor...</div>
+  <div id="results"></div>
+
+  <script>
+    document.getElementById("idea-form").addEventListener("submit", async (e) => {
+      e.preventDefault();
+      const sector = document.getElementById("sector").value;
+      document.getElementById("loading").style.display = "block";
+      document.getElementById("results").innerHTML = "";
+
+      try {
         const response = await fetch("/api/idea", {
           method: "POST",
           headers: { "Content-Type": "application/json" },
@@ -78,21 +102,28 @@
         });
 
         const data = await response.json();
-        document.getElementById("results").innerHTML = "";
-
+        let parsed;
         try {
-          const ideas = JSON.parse(data.message);
-          document.getElementById("results").innerHTML = ideas.map(i => `
-            <div style="margin-bottom: 1.5rem;">
-              <h3>${i.baslik}</h3>
-              <p>${i.detay}</p>
-            </div>
-          `).join("");
-        } catch (e) {
-          document.getElementById("results").innerHTML = "<p>Yanıt beklenen formatta değil.</p>";
-          console.error(e);
+          parsed = JSON.parse(data.message);
+        } catch (err) {
+          document.getElementById("results").innerHTML = "<p>Yanıt JSON formatında değil.</p>";
+          return;
         }
-      });
-    </script>
-  </body>
+
+        const html = parsed.map(item => `
+          <div>
+            <h3>${item.baslik}</h3>
+            <p>${item.detay}</p>
+          </div>
+        `).join("");
+
+        document.getElementById("results").innerHTML = html;
+      } catch (err) {
+        document.getElementById("results").innerHTML = "<p>Bir hata oluştu.</p>";
+      } finally {
+        document.getElementById("loading").style.display = "none";
+      }
+    });
+  </script>
+</body>
 </html>
