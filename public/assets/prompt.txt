@@ -1,0 +1,11 @@
+Aşağıdaki sektöre uygun 3 kampanya önerisi ver. Cevabın sadece JSON formatında olsun:
+
+[
+  {{
+    "baslik": "Kampanya Başlığı 1",
+    "detay": "Açıklama 1",
+    "Uygun Ürün": "Roll-up"
+  }},
+  ...
+]
+Sektör: {{SEKTÖR}}

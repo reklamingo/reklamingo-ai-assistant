@@ -15,8 +15,8 @@ const openai = new OpenAI({
 app.post("/api/idea", async (req, res) => {
   const { sector } = req.body;
 
-  const reklamingoPrompt = fs.readFileSync("./public/assets/reklamingo-smart-prompt.txt", "utf8");
-  const prompt = `${reklamingoPrompt}\nSektör: ${sector}`;
+  const promptTemplate = fs.readFileSync("./public/assets/prompt.txt", "utf8");
+  const prompt = promptTemplate.replace("{{SEKTÖR}}", sector);
 
   try {
     const chatCompletion = await openai.chat.completions.create({
@@ -26,12 +26,15 @@ app.post("/api/idea", async (req, res) => {
     });
 
     const message = chatCompletion.choices[0].message.content;
-    console.log("GPT Cevabı:\n", message);
+
+    if (!message.startsWith("[")) {
+      return res.status(500).json({ error: "Yanıt JSON değil", raw: message });
+    }
 
     res.status(200).json({ message });
   } catch (error) {
     console.error("API Hatası:", error);
-    res.status(500).json({ error: "Bir şeyler ters gitti.", detay: error.message });
+    res.status(500).json({ error: "Sunucu hatası", detay: error.message });
   }
 });
 
