@@ -9,7 +9,7 @@ app.use(bodyParser.json());
 app.use(express.static("public"));
 
 const openai = new OpenAI({
-  apiKey: process.env.OPENAI_API_KEY
+  apiKey: "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"
 });
 
 app.post("/api/idea", async (req, res) => {
