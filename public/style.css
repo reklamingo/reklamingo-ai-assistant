@@ -1,76 +1,60 @@
 
 body {
-  margin: 0;
-  font-family: 'Quicksand', sans-serif;
   background-color: #003e92;
+  font-family: 'Quicksand', sans-serif;
   color: white;
   text-align: center;
 }
 .logo {
   width: 180px;
-  margin-top: 20px;
+  margin-top: 40px;
 }
-.title {
-  font-size: 2rem;
-  margin-bottom: 5px;
+h1 {
+  font-size: 2.5rem;
+  margin: 20px 0 10px;
 }
-.glow-bar {
-  width: 120px;
-  height: 5px;
+.highlight-bar {
+  width: 100px;
+  height: 3px;
+  background: linear-gradient(to right, #3ecf00 0%, transparent 40%, transparent 60%, #3ecf00 100%);
+  background-size: 200% auto;
+  animation: shimmer 2s linear infinite;
   margin: 0 auto 20px;
-  background: linear-gradient(90deg, #3ecf00, #003e92);
-  animation: glowMove 2s infinite linear;
 }
-@keyframes glowMove {
-  0% { background-position: 0 0; }
-  100% { background-position: 120px 0; }
+@keyframes shimmer {
+  0% { background-position: 200% center; }
+  100% { background-position: -200% center; }
 }
-form {
+.input-container {
+  margin: 20px auto;
   display: flex;
   justify-content: center;
-  gap: 1rem;
-  margin-bottom: 20px;
+  align-items: center;
+  gap: 10px;
 }
-#sectorInput {
-  padding: 1rem;
+input[type="text"] {
+  padding: 15px 25px;
+  border: none;
+  border-radius: 999px;
+  font-size: 1rem;
   width: 300px;
-  border-radius: 50px;
-  border: none;
 }
-#generateButton {
-  padding: 1rem 2rem;
-  border-radius: 50px;
+button {
+  padding: 15px 25px;
   border: none;
+  border-radius: 999px;
+  font-size: 1rem;
+  font-weight: bold;
   background-color: #3ecf00;
   color: white;
-  font-weight: bold;
   cursor: pointer;
-  box-shadow: 0 0 10px #3ecf00;
   transition: box-shadow 0.3s ease;
 }
-#generateButton.clicked {
-  box-shadow: none;
+button.glow {
+  animation: glowAnim 1.5s infinite;
 }
-.result-box {
-  border: 2px solid #3ecf00;
-  padding: 1rem;
-  margin: 1rem auto;
-  width: 80%;
-  max-width: 600px;
-}
-.green-text {
-  color: #3ecf00;
-}
-.hidden {
-  display: none;
-}
-#loadingBar {
-  height: 5px;
-  background-color: #3ecf00;
-  width: 0%;
-  transition: width 1s ease;
-}
-footer {
-  margin-top: 2rem;
-  font-size: 0.9rem;
+@keyframes glowAnim {
+  0% { box-shadow: 0 0 5px #3ecf00; }
+  50% { box-shadow: 0 0 20px #3ecf00; }
+  100% { box-shadow: 0 0 5px #3ecf00; }
 }
